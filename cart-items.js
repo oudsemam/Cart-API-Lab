@@ -36,16 +36,35 @@ router.get("/cart-items", (req, res) => {
   res.status(200).json(items);
 });
 
+//get /cart-items by id
+router.get('/cart-items/:id', (req, res) => {
+  console.log (req.params.id)
+  const found = items.find(item => item.id === parseInt(req.params.id));
 
-router.get("/cart-items/id", (req, res) =>{
-  let cartItems = items.find()
-  res.items.id;
-  res.status(200).json(items);
-} )
+  if(!found) {
+    res.status(404).send('The cart item could not be found');
+  }else {
+    res.json(found);
+  }
+  res.status(200).json(item);
+});
 
 
 //accept POST request at URI: /students
 router.post("/cart-items", (req, res) => {
+
+  const quantity = parseInt(req.body.quantity);
+
+  if (!quantiy) {
+    return res.status(400).send('invalid quantity');
+  }
+
+  const price = parseInt(req.body.price);
+  
+  if (!price) {
+    return res.status(400).send('invalid price');
+  }
+
     console.log(req.body)
     let itemAdded = {
       id: items.length + 1,
@@ -56,5 +75,33 @@ router.post("/cart-items", (req, res) => {
     items.push(itemAdded);
     res.status(201).json(itemAdded);
 });
+
+//put method
+router.put('/cart-items/:id', (req, res) =>{
+  const quantity = parseInt(req.body.quantity);
+
+  if (!quantiy) {
+    return res.status(400).send("invalid quantity");
+  }
+
+  const price = parseInt(req.body.price);
+
+  if (!price) {
+    return res.status(400).send("invalid price");
+  }
+  
+  const found = items.find(item => item.id === parseInt(req.params.id));
+  if (found) {
+    
+    found.price = req.body.price;
+    found.quantiy = req.body.quantiy;
+    found.product = req.body.product;
+
+    res.json (found);
+  } else {
+    res.status(404).send('the cart item could not be found')
+  }
+});
+
 
 module.exports = router;
